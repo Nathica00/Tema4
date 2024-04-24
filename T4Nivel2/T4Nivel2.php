@@ -17,30 +17,49 @@ de tirades entre tots els daus.*/
 abstract class PokerDice { //esta clase es la clase Padre de todos los dados
    public  $name; // cada dado tendrá un nombre diferente porque son diferentes dados
    public  $Figures; // las figuras de todos los dados son las mismas
+   public  $lastThrow; // Figura de la última tirada del dado en cuestion
     
-    public function __construct(string $name, array $Figures=["A","K","Q","J","7","8"]) {
+   public function __construct(string $name, array $Figures=["A","K","Q","J","7","8"]) {
         $this->name=$name;
         $this->Figures=$Figures;
+        $this->lastThrow="";
     }
 
+    public function printFigures(){
+          echo "Estas son las figuras del Dado en cuestion:  <br>";
+          print_r ( $this->Figures);
+    }   
+
     public function throw(): string {  // la funcion de turar dado es publica ya que será igual para cada uno de los dados
-            echo "Estas son las figuras del Dado en cuestion:  <br>";
-            print_r ( $this->Figures);
-            echo "<br><br>Ahora tiramos el dado!! y......wala! : <br>";
-            $FiguresDice=$this->Figures;
-            $AleatoryFigure= array_rand($FiguresDice,1);
-            echo "<h2>" .$FiguresDice[$AleatoryFigure]."</h2>";
-            $tirada=$FiguresDice[$AleatoryFigure];
-            return $tirada;
+            
+        echo "<br><br>Ahora tiramos el dado: <b>" .$this->name ."</b> y......wala! : <br>";
+        $FiguresDice=$this->Figures;
+        $AleatoryFigure= array_rand($FiguresDice,1);
+        echo "<h2>" .$FiguresDice[$AleatoryFigure]."</h2>";
+        $tirada=$FiguresDice[$AleatoryFigure];
+        $this->ultimaTirada=$tirada;
+        return $tirada;
         }
 
     public function shapeName(){ // esta funcion me mostrará la ultima tirada del dado en cuestion
         
-        echo $this->name;
-        // terminar de crear la función
+        echo "Esta es la última tirada del dado <b>" .  $this->name ."</b> : <br><h2>" .$this->ultimaTirada ."<br><br></h2>" ;
     }
+
+    public function getTotalThrows(array $DadosTotales){
+        foreach ($DadosTotales as $key => $value){ // este for each es para recolectar el valor de cada tirada
+            $allDices;
+            $dado=$value; 
+            $allDices[$key]=$dado->ultimaTirada; //ese valor de la tirada de cada dado lo asigno a otro array para mostrar luego la tirada completa.
+        }
+        
+        echo "<br><b>La tirada de los dados simultaneamente es: </b><br>" ;
+        print_r ($allDices);
+    }
+
 }
 
+//aplicacion para hacer tirada de 5 dados simultáneamente:
 
 include 'PokerDice1.php';
 include 'PokerDice2.php';
@@ -55,19 +74,23 @@ $dice3= new PokerDice2("Dice3");
 $dice4= new PokerDice2("Dice4");
 $dice5= new PokerDice2("Dice5");
 
-$Dados=[$dice1,$dice2,$dice3,$dice4,$dice5]; // arreglar esto como agregar valores al array leer el tema
-foreach ($Dados as $key => $value){
-    $allDices=[];
-    $dado=$value; 
-    $resultadoTirada=$dado->throw();  
-    foreach ($allDices as $key => $value) {
-        $allDices[$key]=$resultadoTirada;        
-    }
+$Dados=[$dice1,$dice2,$dice3,$dice4,$dice5]; //Ceo un array de los 5 dados
+
+//Aqui comieno a llamar a las funciones:
+echo "<h2> COMIENZA EL JUEGO! </h2>";
+
+foreach ($Dados as $key => $value) {
+    $dado=$value;
+    $dado->throw();
 }
-echo "la tirada de 5 dados simultaneamente es: <br>" 
-print_r ($allDices);
 
-echo "Este es el nomre del primer dado: <b>" .$dice1->name."</b><br>";
+/* si me interesa volver a ver el valor de la ultima tirada de un dado en 
+especial llamo a la funcion shapeName:*/
 
+$dice1->shapeName();
+
+//Si quiero ver el total de las tiradas llamoa la funcion getTotalThrows
+
+$dice1->getTotalThrows($Dados);
 
 ?>
